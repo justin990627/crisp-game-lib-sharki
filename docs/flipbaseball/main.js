@@ -2,6 +2,7 @@ title = "BASEBALL";
 
 description = `
 [Tap] Swing
+AVOID BOMB
 `;
 
 characters = [
@@ -34,6 +35,7 @@ let num = 1;
 let rotate = 0;
 let swinging = false;
 let swingPos = {x:0, y:0}
+let stunned;
 
 options = {
   theme: 'shapeDark'
@@ -72,12 +74,17 @@ let waveCount;
 */
 let bombs;
 
+
 const G = {
   BALL_MIN_BASE_SPEED: 1,
   BALL_MAX_BASE_SPEED: 1.5,
   WIDTH: 100,
   HEIGHT: 150
 };
+
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
 
 function update() {
   if (!ticks) {
@@ -91,8 +98,13 @@ function update() {
   char('c', input.pos.x, input.pos.y);
 
   color("yellow");
-  if (input.isJustPressed && !swinging) {
+  if (input.isJustPressed && !swinging && !stunned) {
     swinging = true;
+  }
+
+  if (input.isJustPressed && stunned)
+  {
+    play("select");
   }
   if (swinging) {
     play("laser"); //change the sound later
@@ -142,15 +154,27 @@ function update() {
 	const collideWithBat = char("b", bo.pos).isColliding.rect.yellow;
 
     if(collideWithBat) {
-      //addScore(-10, bo.pos);
-    }
+      color("red");
+      particle(bo.pos);
+      play("explosion");
+      stunned = 1;
+      sleep(3000).then(() => {; //3 seconds
+      console.log("stunned!");
+      stunned = 0;
+    });
 
-    return (collideWithBat || bo.pos.y > G.HEIGHT);
+    
+    }
+  return (collideWithBat || bo.pos.y > G.HEIGHT);
   });
 
   color("light_black");
   text("Time Left:", 14, 10);
   num = Math.floor(61 - ((Date.now() - startTime) / 1000));
+  //if score add 250, time add 5s
+  if(score == +50){
+    num = num + Math.floor(51 - ((Date.now() - startTime) / 1000));
+  }
   if (num <= 0) {
     end();
   }

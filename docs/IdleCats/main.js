@@ -1,7 +1,7 @@
 title = "Idle Cats";
 
 description = `
-	[CLICK]
+	[TAP] 
 `;
 
 // Define pixel arts of characters.
@@ -37,6 +37,13 @@ const G = {
 	WIDTH: 100,
 	HEIGHT: 100
 };
+
+// Menu Constants
+const M = {
+	HOWTALL: 65,
+	SPEEDMOVE: 2,
+	MENUY: 65,
+}
 
 let pause_dir = 6;
 
@@ -75,6 +82,9 @@ let catList = [];
  */
 let tempCat;
 
+// Menu Functions
+let menuMove = 0;
+
 tempCat = {
 	pos: vec(G.WIDTH/2, G.HEIGHT/2),
 	frame: 0,
@@ -100,7 +110,8 @@ function update() {
 
 	var addCat = false;
 
-	if(input.isJustPressed)
+	// Clicking and not in menu
+	if(input.isJustPressed && input.pos.y < M.MENUY)
 	{
 		addScore(1);
 		catList.forEach((c) => {
@@ -141,4 +152,53 @@ function update() {
 		char(cat_frames[c.frame],c.pos);
 	});
 
+	// Menu Update
+	if(input.pos.y > M.MENUY){
+		color("light_cyan");
+		if(menuMove < M.HOWTALL){
+			// Menu Box
+			box(G.WIDTH/2, G.HEIGHT, G.WIDTH, menuMove);
+			box(13, G.HEIGHT, 25, menuMove + 15);
+
+			// Tab Text
+			color("white");
+			text("Menu", 3, G.HEIGHT - 4 - menuMove/2);
+
+			// Speed at which menu moves
+			menuMove += M.SPEEDMOVE;
+		}
+		else{
+			// Menu Box
+			box(G.WIDTH/2, G.HEIGHT, G.WIDTH, M.HOWTALL);
+			box(13, G.HEIGHT, 25, M.HOWTALL + 15 + 1); // +1 Varies on HOWTALL Constant (Weird)
+
+			// Tab Text
+			color("white");
+			text("Menu", 3, G.HEIGHT - 4 - M.HOWTALL/2);
+		}
+	}
+	else{
+		color("light_cyan");
+		if(menuMove > 0){
+			// Menu Box
+			box(G.WIDTH/2, G.HEIGHT, G.WIDTH, menuMove);
+			box(13, G.HEIGHT, 25, menuMove + 15);
+
+			// Tab Text
+			color("white");
+			text("Menu", 3, G.HEIGHT - 4 - menuMove/2);
+
+			// Speed at which menu moves
+			menuMove -= M.SPEEDMOVE;
+		}
+		else{
+			// Menu Tab
+			color("light_cyan");
+			box(13, G.HEIGHT, 25, 15);
+			
+			// Tab Text
+			color("white");
+			text("Menu", 3, G.HEIGHT - 4);
+		}
+	}
 }
