@@ -1,10 +1,10 @@
 // The title of the game to be displayed on the title screen
-title  =  "SHOOT EM";
+title  =  "Space War";
 
 // The description, which is also displayed on the title screen
 description  =  `
 Destroy Enemies
-Avoid Civilians
+Avoid Friendly Fire
 `;
 
 // The array of custom sprites
@@ -21,7 +21,7 @@ PPPP
   rrrr
 rrrpr
 rrrpr
-  rrrr
+  rrrrç
   rrrr
 `,`
   PPPP
@@ -58,10 +58,10 @@ const G = {
 // Refer to the official documentation for all available options
 options  = {
   viewSize: {x: G.WIDTH, y:G.HEIGHT},
-  seed: 2,
-  // isPlayingBgm: true,
-  // theme: "shapeDark",
-  // isReplayEnabled: true,
+  seed: 29,
+  isPlayingBgm: true,
+  theme: "shapeDark",
+  isReplayEnabled: true,
 
   isCapturing: true,
   isCapturingGameCanvasOnly: true,
