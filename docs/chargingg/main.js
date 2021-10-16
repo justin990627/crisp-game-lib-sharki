@@ -59,7 +59,13 @@ const G = {
 options  = {
   viewSize: {x: G.WIDTH, y:G.HEIGHT},
   seed: 2,
-  isPlayingBgm: true
+  // isPlayingBgm: true,
+  // theme: "shapeDark",
+  // isReplayEnabled: true,
+
+  isCapturing: true,
+  isCapturingGameCanvasOnly: true,
+  captureCanvasScale: 2
 };
 
 //create star background

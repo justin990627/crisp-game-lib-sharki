@@ -172,8 +172,8 @@ function update() {
   text("Time Left:", 14, 10);
   num = Math.floor(61 - ((Date.now() - startTime) / 1000));
   //if score add 250, time add 5s
-  if(score == +50){
-    num = num + Math.floor(51 - ((Date.now() - startTime) / 1000));
+  while(score + 50){
+    num += 5000;
   }
   if (num <= 0) {
     end();
