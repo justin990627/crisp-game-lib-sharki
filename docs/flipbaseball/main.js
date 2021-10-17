@@ -7,21 +7,21 @@ AVOID BOMB
 
 characters = [
   `
- yyy
-yr ry 
-y r y
-yr ry
- yyy
+ lll
+lC Cl 
+l C l
+lC Cl
+ lll
 `,
   `
-  r
- lll
-lllll
-lllll
-lllll
- lll
+  R
+ LLL
+LLLLL
+LLLLL
+LLLLL
+ LLL
 `,
-`
+  `
   ll
   ll l
 llllll
@@ -34,7 +34,7 @@ let startTime;
 let num = 1;
 let rotate = 0;
 let swinging = false;
-let swingPos = {x:0, y:0}
+let swingPos = { x: 0, y: 0 }
 let stunned;
 
 options = {
@@ -95,22 +95,28 @@ function update() {
     startTime = Date.now();
   }
 
-  char('c', input.pos.x, input.pos.y);
+  if(stunned) {
+    color("light_red");
+  } else {
+    color("light_black");
+  }
+  char('c', 
+       (input.pos.x < 0) ? 4 : ((input.pos.x > G.WIDTH) ? G.WIDTH - 4 : input.pos.x), 
+       input.pos.y);
 
   color("yellow");
   if (input.isJustPressed && !swinging && !stunned) {
     swinging = true;
   }
 
-  if (input.isJustPressed && stunned)
-  {
+  if (input.isJustPressed && stunned) {
     play("select");
   }
-  if (swinging) {
+  if (swinging && !stunned) {
     play("laser"); //change the sound later
-    bar(input.pos.x + 3, input.pos.y, 15, 2, (rotate + 30)*Math.PI/180, 0);
+    bar(input.pos.x + 3, input.pos.y, 15, 2, (rotate + 30) * Math.PI / 180, 0);
     rotate -= 8; //speed of swing
-    if(rotate < -90) {
+    if (rotate < -90) {
       swinging = false;
       rotate = 0;
     }
@@ -127,11 +133,14 @@ function update() {
   }
   remove(balls, (ba) => {
     ba.pos.y += ballSpeed;
-
+    color("black");
     const collideWithBat = char("a", ba.pos).isColliding.rect.yellow;
 
-    if(collideWithBat) {
+    if (collideWithBat) {
       addScore(10, ba.pos);
+      if(score % 50 == 0) {
+        startTime += 5000;
+      }
     }
 
     return (collideWithBat || ba.pos.y > G.HEIGHT);
@@ -151,31 +160,29 @@ function update() {
     bo.pos.y += ballSpeed;
     char("b", bo.pos);
 
-	const collideWithBat = char("b", bo.pos).isColliding.rect.yellow;
+    const collideWithBat = char("b", bo.pos).isColliding.rect.yellow;
 
-    if(collideWithBat) {
+    if (collideWithBat) {
       color("red");
       particle(bo.pos);
       play("explosion");
       stunned = 1;
-      sleep(3000).then(() => {; //3 seconds
-      console.log("stunned!");
-      stunned = 0;
-    });
+      swinging = false;
+      rotate = 0;
+      sleep(3000).then(() => {
+        ; //3 seconds
+        console.log("stunned!");
+        stunned = 0;
+      });
 
-    
+
     }
-  return (collideWithBat || bo.pos.y > G.HEIGHT);
+    return (collideWithBat || bo.pos.y > G.HEIGHT);
   });
 
   color("light_black");
   text("Time Left:", 14, 10);
   num = Math.floor(61 - ((Date.now() - startTime) / 1000));
-  //if score add 250, time add 5s
-  if(score = 50){
-    console.log("+5 sec")
-    //num = Math.floor(10);
-  }
   if (num <= 0) {
     end();
   }
