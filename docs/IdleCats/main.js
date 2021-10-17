@@ -46,6 +46,9 @@ const M = {
 }
 
 let pause_dir = 6;
+let cat = 1;
+let income;
+let timer;
 
 const cat_frames = {
 	0: 'a',
@@ -84,6 +87,7 @@ let tempCat;
 
 // Menu Functions
 let menuMove = 0;
+let move = 112;
 
 tempCat = {
 	pos: vec(G.WIDTH/2, G.HEIGHT/2),
@@ -106,9 +110,11 @@ function update() {
 			color: catColor
 		}
 		catList.push(tempCat);
+		timer = Date.now();
 	}
 
 	var addCat = false;
+	income = cat * 1; //do income per second calculation here
 
 	// Clicking and not in menu
 	if(input.isJustPressed && input.pos.y < M.MENUY)
@@ -137,6 +143,8 @@ function update() {
 			color: catColor
 		}
 		catList.push(tempCat);
+		score -= 10;
+		cat++;
 	}
 
 	catList.forEach((c,i) => {
@@ -160,17 +168,26 @@ function update() {
 			box(G.WIDTH/2, G.HEIGHT, G.WIDTH, menuMove);
 			box(13, G.HEIGHT, 25, menuMove + 15);
 
+			color("red")
+			box(13, move, 20, 12);
+			box(13, move + 14, 20, 12);
+
 			// Tab Text
 			color("white");
 			text("Menu", 3, G.HEIGHT - 4 - menuMove/2);
 
 			// Speed at which menu moves
+			move -= 1
 			menuMove += M.SPEEDMOVE;
 		}
 		else{
 			// Menu Box
 			box(G.WIDTH/2, G.HEIGHT, G.WIDTH, M.HOWTALL);
 			box(13, G.HEIGHT, 25, M.HOWTALL + 15 + 1); // +1 Varies on HOWTALL Constant (Weird)
+			
+			color("red")
+			box(13, move, 20, 12);
+			box(13, move + 14, 20, 12);
 
 			// Tab Text
 			color("white");
@@ -184,11 +201,16 @@ function update() {
 			box(G.WIDTH/2, G.HEIGHT, G.WIDTH, menuMove);
 			box(13, G.HEIGHT, 25, menuMove + 15);
 
+			color("red")
+			box(13, move, 20, 12);
+			box(13, move + 14, 20, 12);
+
 			// Tab Text
 			color("white");
 			text("Menu", 3, G.HEIGHT - 4 - menuMove/2);
 
 			// Speed at which menu moves
+			move += 1
 			menuMove -= M.SPEEDMOVE;
 		}
 		else{
@@ -200,5 +222,15 @@ function update() {
 			color("white");
 			text("Menu", 3, G.HEIGHT - 4);
 		}
+	}
+
+	//draws the income per second text
+	color("yellow");
+	var str = "+" + income + "/s";
+	text(str, 3, 9);
+	//add income every 1000 ms(1 second)
+	if(Date.now() - timer > 1000) {
+		addScore(income);
+		timer = Date.now();
 	}
 }
